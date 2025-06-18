@@ -1,0 +1,135 @@
+<%- include('../partials/header') %>
+
+<style>
+    /* Custom styles for order detail page */
+    .order-detail-section {
+        padding: 60px 0;
+        background-color: var(--background-light);
+    }
+    .order-detail-box {
+        max-width: 800px;
+        margin: 0 auto;
+        background-color: var(--white-color);
+        border-radius: var(--border-radius);
+        box-shadow: var(--box-shadow);
+        padding: 40px;
+    }
+    .order-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding-bottom: 20px;
+        border-bottom: 1px solid var(--light-gray);
+        margin-bottom: 20px;
+    }
+    .order-header h2 {
+        font-size: 1.8rem;
+    }
+    .order-header .order-status {
+        padding: 8px 15px;
+        border-radius: 50px;
+        font-size: 0.9rem;
+        font-weight: 500;
+        color: var(--white-color);
+    }
+    .status-selesai { background-color: var(--primary-color); }
+    .status-proses { background-color: var(--secondary-color); }
+
+    .order-info {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 15px;
+        margin-bottom: 30px;
+    }
+    .order-info p {
+        color: var(--text-light);
+    }
+    .order-info strong {
+        color: var(--text-dark);
+        display: block;
+    }
+    .items-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 30px;
+    }
+    .items-table th, .items-table td {
+        text-align: left;
+        padding: 12px;
+        border-bottom: 1px solid var(--light-gray);
+    }
+    .items-table th {
+        background-color: #f8f9fa;
+    }
+    .order-summary {
+        max-width: 300px;
+        margin-left: auto;
+    }
+    .summary-line {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 10px;
+    }
+    .summary-line.total {
+        font-size: 1.1rem;
+        font-weight: 700;
+        padding-top: 10px;
+        border-top: 1px solid var(--text-dark);
+    }
+    .back-link {
+        display: inline-block;
+        margin-top: 30px;
+        color: var(--primary-color);
+        font-weight: 500;
+    }
+</style>
+
+<section class="order-detail-section">
+    <div class="container">
+        <% if (order) { %>
+            <div class="order-detail-box" data-aos="fade-up">
+                <div class="order-header">
+                    <h2>Detail Pesanan</h2>
+                    <span class="order-status <%= order.status === 'Selesai' ? 'status-selesai' : 'status-proses' %>">
+                        <%= order.status %>
+                    </span>
+                </div>
+                <div class="order-info">
+                    <p><strong>Nomor Pesanan:</strong> <%= order.id %></p>
+                    <p><strong>Tanggal Pesanan:</strong> <%= order.tanggal %></p>
+                </div>
+                
+                <h3>Item yang Dipesan</h3>
+                <table class="items-table">
+                    <thead>
+                        <tr>
+                            <th>Nama Item</th>
+                            <th>Jumlah</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% order.items.forEach(item => { %>
+                            <tr>
+                                <td><%= item.nama %></td>
+                                <td><%= item.qty %></td>
+                            </tr>
+                        <% }) %>
+                    </tbody>
+                </table>
+
+                <div class="order-summary">
+                    <div class="summary-line total">
+                        <span>Total Pembayaran</span>
+                        <span>Rp<%= order.total.toLocaleString('id-ID') %></span>
+                    </div>
+                </div>
+
+                <a href="/profil?view=riwayat" class="back-link"><i class="fas fa-arrow-left"></i> Kembali ke Riwayat</a>
+            </div>
+        <% } else { %>
+            <p class="text-center">Pesanan tidak ditemukan.</p>
+        <% } %>
+    </div>
+</section>
+
+<%- include('../partials/footer') %>

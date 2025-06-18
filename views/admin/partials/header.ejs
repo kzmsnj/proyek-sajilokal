@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= judul %> | SajiLokal Admin</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+</head>
+<body>
+    <div class="admin-container">
+        <aside class="admin-sidebar">
+            <div class="sidebar-header">
+                <img src="/img/logo-sajilokal-white.png" alt="Logo">
+            </div>
+            <ul class="sidebar-nav">
+                <li><a href="/admin" class="<%= path === '/admin/dashboard' ? 'active' : '' %>"><i class="fas fa-tachometer-alt"></i> Dasbor</a></li>
+                <li><a href="/admin/orders" class="<%= path === '/admin/orders' ? 'active' : '' %>"><i class="fas fa-receipt"></i> Kelola Pesanan</a></li>
+                <li><a href="/admin/menus" class="<%= path === '/admin/menus' ? 'active' : '' %>"><i class="fas fa-utensils"></i> Kelola Menu</a></li>
+                <li><a href="/admin/users" class="<%= path === '/admin/users' ? 'active' : '' %>"><i class="fas fa-users"></i> Kelola Pelanggan</a></li>
+                <li><a href="/logout"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+            </ul>
+        </aside>
+        <main class="admin-main">

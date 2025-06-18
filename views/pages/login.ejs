@@ -1,0 +1,79 @@
+<%- include('../partials/header') %>
+<style>
+    .login-section {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 80px 20px;
+        min-height: 80vh;
+    }
+    .login-box {
+        max-width: 450px;
+        width: 100%;
+        background: var(--white-color);
+        padding: 40px;
+        border-radius: var(--border-radius);
+        box-shadow: var(--box-shadow);
+        text-align: center;
+    }
+    .login-box h2 {
+        margin-bottom: 10px;
+    }
+    .login-box p {
+        color: var(--text-light);
+        margin-bottom: 30px;
+    }
+    .login-box .form-group {
+        text-align: left;
+        margin-bottom: 20px;
+    }
+    .login-box label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: 500;
+    }
+    .login-box input {
+        width: 100%;
+        padding: 12px;
+        border: 1px solid var(--light-gray);
+        border-radius: 8px;
+        font-size: 1rem;
+    }
+    .login-box .btn-primary {
+        width: 100%;
+        margin-top: 10px;
+    }
+    .login-box .demo-info {
+        margin-top: 25px;
+        font-size: 0.9rem;
+        color: #777;
+        background-color: #f0f0f0;
+        padding: 10px;
+        border-radius: 8px;
+    }
+</style>
+
+<section class="login-section">
+    <div class="login-box" data-aos="fade-up">
+        <h2>Selamat Datang!</h2>
+        <p>Silakan login untuk melanjutkan pesanan Anda.</p>
+        
+        <form action="/login" method="POST">
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" id="email" name="email" placeholder="contoh@email.com" required>
+            </div>
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" placeholder="••••••••" required>
+            </div>
+            <button type="submit" class="btn-primary">Login</button>
+        </form>
+
+        <div class="demo-info">
+            <p style="margin: 0;">Untuk demo, gunakan:<br><strong>user@sajilokal.com</strong> & pw: <strong>12345</strong></p>
+        </div>
+    </div>
+</section>
+
+<%- include('../partials/footer') %>

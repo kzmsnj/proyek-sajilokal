@@ -1,0 +1,39 @@
+<%- include('../partials/header') %>
+
+<!-- Hero Section untuk Kategori -->
+<section class="food-search text-center" style="padding: 60px 0;">
+    <div class="container" data-aos="fade-up">
+        <p style="font-size: 1.2rem; color: #eee;">Menampilkan Menu Untuk</p>
+        <h1 style="font-size: 3rem;"><%= kategori.nama %></h1>
+    </div>
+</section>
+
+<!-- Foods Section Start -->
+<section class="food-menu">
+    <div class="container">
+        <% if (makanan && makanan.length > 0) { %>
+            <div class="grid-layout">
+                <% makanan.forEach((item, index) => { %>
+                <div class="food-card" data-aos="fade-up" data-aos-delay="<%= 100 * (index % 6) %>">
+                    <div class="card-image">
+                        <img src="<%= item.gambar %>" alt="<%= item.nama %>">
+                    </div>
+                    <div class="card-content">
+                        <h4><%= item.nama %></h4>
+                        <p class="food-price">Rp<%= item.harga.toLocaleString('id-ID') %></p>
+                        <p class="food-details"><%= item.deskripsi %></p>
+                        <form action="/keranjang/tambah/<%= item.id %>" method="POST">
+                            <button type="submit" class="btn-primary">Pesan Sekarang</button>
+                        </form>
+                    </div>
+                </div>
+                <% }) %>
+            </div>
+        <% } else { %>
+            <p class="text-center" data-aos="fade-up">Belum ada makanan di kategori ini.</p>
+        <% } %>
+    </div>
+</section>
+<!-- Foods Section End -->
+
+<%- include('../partials/footer') %>

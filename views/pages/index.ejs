@@ -1,0 +1,70 @@
+<%- include('../partials/header') %>
+
+<!-- Hero Section Start -->
+<section class="food-search">
+    <div class="container">
+        <h1 data-aos="fade-up">Sajian Lokal, Rasa Istimewa.</h1>
+        <p data-aos="fade-up" data-aos-delay="200">Temukan dan pesan aneka masakan warteg favoritmu dengan mudah.</p>
+        <form action="/makanan" method="GET" data-aos="fade-up" data-aos-delay="400">
+            <input type="search" name="keyword" placeholder="Cari rendang, ayam bakar..." required>
+            <input type="submit" value="Cari Makanan" class="btn-primary">
+        </form>
+    </div>
+</section>
+<!-- Hero Section End -->
+
+<!-- Category Section Start -->
+<% if (kategori && kategori.length > 0) { %>
+<section class="categories">
+    <div class="container">
+        <div class="section-title" data-aos="fade-up">
+            <h2>Jelajahi Kategori</h2>
+        </div>
+
+        <div class="grid-layout">
+            <% kategori.forEach((cat, index) => { %>
+                <a href="/kategori/<%= cat.id %>" class="category-card" data-aos="fade-up" data-aos-delay="<%= 100 * (index + 1) %>">
+                    <div class="card-image">
+                        <img src="<%= cat.gambar %>" alt="<%= cat.nama %>">
+                        <h3 class="card-title"><%= cat.nama %></h3>
+                    </div>
+                </a>
+            <% }) %>
+        </div>
+    </div>
+</section>
+<% } %>
+<!-- Category Section End -->
+
+<!-- Foods Section Start -->
+<section class="food-menu" style="background-color: var(--white-color);">
+    <div class="container">
+        <div class="section-title" data-aos="fade-up">
+            <h2>Menu Pilihan Untukmu</h2>
+        </div>
+        <div class="grid-layout">
+            <% if (makanan && makanan.length > 0) { %>
+                <% makanan.forEach((item, index) => { %>
+                <div class="food-card" data-aos="fade-up" data-aos-delay="<%= 100 * (index + 1) %>">
+                    <div class="card-image">
+                        <img src="<%= item.gambar %>" alt="<%= item.nama %>">
+                    </div>
+                    <div class="card-content">
+                        <h4><%= item.nama %></h4>
+                        <p class="food-price">Rp<%= item.harga.toLocaleString('id-ID') %></p>
+                        <p class="food-details"><%= item.deskripsi %></p>
+                        <form action="/keranjang/tambah/<%= item.id %>" method="POST">
+                            <button type="submit" class="btn-primary">Pesan Sekarang</button>
+                        </form>
+                    </div>
+                </div>
+                <% }) %>
+            <% } else { %>
+                <p class="text-center">Menu belum tersedia.</p>
+            <% } %>
+        </div>
+    </div>
+</section>
+<!-- Foods Section End -->
+
+<%- include('../partials/footer') %>

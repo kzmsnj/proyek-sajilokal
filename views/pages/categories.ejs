@@ -1,0 +1,28 @@
+<%- include('../partials/header') %>
+
+<!-- Category Section Start -->
+<section class="categories" style="padding-top: 50px;">
+    <div class="container">
+        <div class="section-title" data-aos="fade-up">
+            <h2>Semua Kategori</h2>
+        </div>
+
+        <% if (kategori && kategori.length > 0) { %>
+            <div class="grid-layout">
+                <% kategori.forEach((cat, index) => { %>
+                    <a href="/kategori/<%= cat.id %>" class="category-card" data-aos="fade-up" data-aos-delay="<%= 100 * (index % 6) %>">
+                        <div class="card-image">
+                            <img src="<%= cat.gambar %>" class="img-responsive" alt="<%= cat.nama %>">
+                            <h3 class="card-title"><%= cat.nama %></h3>
+                        </div>
+                    </a>
+                <% }) %>
+            </div>
+        <% } else { %>
+            <p class="text-center" data-aos="fade-up">Saat ini belum ada kategori yang tersedia.</p>
+        <% } %>
+    </div>
+</section>
+<!-- Category Section End -->
+
+<%- include('../partials/footer') %>

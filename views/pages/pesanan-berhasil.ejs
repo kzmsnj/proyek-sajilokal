@@ -1,0 +1,47 @@
+<%- include('../partials/header') %>
+
+<style>
+    .success-section {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 80px 20px;
+        min-height: 70vh;
+        text-align: center;
+    }
+    .success-box {
+        max-width: 600px;
+        background-color: var(--white-color);
+        padding: 50px;
+        border-radius: var(--border-radius);
+        box-shadow: var(--box-shadow);
+    }
+    .success-box .icon {
+        font-size: 5rem;
+        color: var(--primary-color);
+        line-height: 1;
+        margin-bottom: 25px;
+    }
+    .success-box h2 {
+        font-size: 2rem;
+        margin-bottom: 15px;
+    }
+    .success-box p {
+        color: var(--text-light);
+        line-height: 1.6;
+        margin-bottom: 30px;
+    }
+</style>
+
+<section class="success-section">
+    <div class="success-box" data-aos="zoom-in">
+        <div class="icon">
+            <i class="fas fa-check-circle"></i>
+        </div>
+        <h2>Pesanan Berhasil!</h2>
+        <p>Terima kasih telah memesan di SajiLokal. Pesanan Anda sedang kami siapkan dan akan segera diantar ke alamat Anda.</p>
+        <a href="/profil?view=riwayat" class="btn-primary">Lihat Riwayat Pesanan</a>
+    </div>
+</section>
+
+<%- include('../partials/footer') %>

@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= judul %></title>
+    <link rel="shortcut icon" href="/img/favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+    <link rel="stylesheet" href="/css/style.css">
+    <style>
+        /* Style untuk Avatar di Navigasi */
+        .profile-nav-link {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .nav-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+    </style>
+</head>
+<body>
+    <!-- Notifikasi Flash Message -->
+    <% if (success_msg && success_msg.length > 0) { %>
+        <div class="flash-message success" onclick="this.style.display='none'">
+            <%- success_msg %>
+        </div>
+    <% } %>
+    <% if (error_msg && error_msg.length > 0) { %>
+        <div class="flash-message error" onclick="this.style.display='none'">
+            <%- error_msg %>
+        </div>
+    <% } %>
+
+    <header class="navbar">
+        <nav class="navbar-menu">
+            <div class="container">
+                <div class="logo">
+                    <a href="/" title="SajiLokal">
+                        <img src="/img/logo-sajilokal.png" alt="SajiLokal Logo" class="img-responsive">
+                    </a>
+                </div>
+                <div class="menu-toggle">
+                    <i class="fas fa-bars"></i>
+                </div>
+                <!-- Menu Utama -->
+                <div class="menu">
+                    <ul>
+                        <li><a class="<%= path === '/' ? 'active' : '' %>" href="/">Beranda</a></li>
+                        <li><a class="<%= path === '/kategori' ? 'active' : '' %>" href="/kategori">Kategori</a></li>
+                        <li><a class="<%= path === '/makanan' ? 'active' : '' %>" href="/makanan">Menu</a></li>
+                        <!-- Tautan Kontak dipindahkan ke sini agar selalu terlihat -->
+                        <li><a class="<%= path === '/kontak' ? 'active' : '' %>" href="/kontak">Kontak</a></li>
+                        
+                        <% if (session.isLoggedIn) { %>
+                             <li><a href="/profil" class="profile-nav-link">
+                                <img src="<%= session.user.profilePicture %>" alt="Avatar" class="nav-avatar">
+                                <span>Profil</span>
+                            </a></li>
+                            <li><a href="/logout">Logout</a></li>
+                        <% } else { %>
+                            <li><a class="<%= path === '/login' ? 'active' : '' %>" href="/login">Login</a></li>
+                        <% } %>
+                        
+                        <li>
+                            <a href="/keranjang" id="shopping-cart-icon" class="shopping-cart">
+                                <i class="fa fa-shopping-cart"></i>
+                                <% const itemCount = cart.reduce((sum, item) => sum + item.qty, 0); %>
+                                <span class="badge"><%= itemCount %></span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>

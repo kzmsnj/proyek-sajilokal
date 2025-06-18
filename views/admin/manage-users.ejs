@@ -1,0 +1,41 @@
+<%- include('partials/header') %>
+
+<div class="admin-content">
+    <h2>Kelola Data Pelanggan</h2>
+    <p>Di bawah ini adalah daftar semua pelanggan yang terdaftar di SajiLokal.</p>
+
+    <table class="data-table">
+        <thead>
+            <tr>
+                <th>Foto Profil</th>
+                <th>Nama Pelanggan</th>
+                <th>Email</th>
+                <th>No. Telepon</th>
+                <th>Aksi</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% if (customers && customers.length > 0) { %>
+                <% customers.forEach(customer => { %>
+                    <tr>
+                        <td>
+                            <img src="<%= customer.profilePicture %>" alt="Avatar" style="width: 50px; height: 50px; border-radius: 50%; object-fit: cover;">
+                        </td>
+                        <td><%= customer.name %></td>
+                        <td><%= customer.email %></td>
+                        <td><%= customer.phone || '-' %></td>
+                        <td>
+                            <a href="#" class="action-btn" style="color: #e67e22;">Nonaktifkan</a>
+                        </td>
+                    </tr>
+                <% }) %>
+            <% } else { %>
+                <tr>
+                    <td colspan="5" style="text-align: center;">Belum ada pelanggan yang terdaftar.</td>
+                </tr>
+            <% } %>
+        </tbody>
+    </table>
+</div>
+
+<%- include('partials/footer') %>

@@ -1,0 +1,114 @@
+<%- include('partials/header') %>
+
+<style>
+    .modal {
+        display: none; position: fixed; z-index: 1001; left: 0; top: 0; width: 100%; height: 100%;
+        overflow: auto; background-color: rgba(0,0,0,0.5);
+    }
+    .modal-content {
+        background-color: #fefefe; margin: 10% auto; padding: 30px; border-radius: 12px;
+        border: 1px solid #888; width: 80%; max-width: 500px;
+    }
+    .close-btn { color: #aaa; float: right; font-size: 28px; font-weight: bold; cursor: pointer; }
+    .form-group { margin-bottom: 15px; }
+    .form-group label { display: block; margin-bottom: 5px; }
+    .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 10px; border-radius: 5px; border: 1px solid #ccc; }
+</style>
+
+<div class="admin-content">
+    <div style="display: flex; justify-content: space-between; align-items: center;">
+        <h2>Kelola Menu Makanan</h2>
+        <button onclick="openModal('addModal')" class="btn-primary">Tambah Menu Baru</button>
+    </div>
+    
+    <table class="data-table">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nama Menu</th>
+                <th>Kategori</th>
+                <th>Harga</th>
+                <th>Aksi</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% menus.forEach(menu => { %>
+                <tr>
+                    <td><%= menu.id %></td>
+                    <td><%= menu.nama %></td>
+                    <td><%= categories.find(c => c.id === menu.id_kategori).nama %></td>
+                    <td>Rp<%= menu.harga.toLocaleString('id-ID') %></td>
+                    <td>
+                        <a href="#" onclick="openEditModal('<%= JSON.stringify(menu) %>')" class="action-btn">Edit</a>
+                        <form action="/admin/menus/delete/<%= menu.id %>" method="POST" style="display:inline;" onsubmit="return confirm('Anda yakin ingin menghapus menu ini?');">
+                            <button type="submit" class="action-btn" style="color: #e74c3c; background: none; border: none; cursor: pointer;">Hapus</button>
+                        </form>
+                    </td>
+                </tr>
+            <% }) %>
+        </tbody>
+    </table>
+</div>
+
+<!-- Modal Tambah Menu -->
+<div id="addModal" class="modal">
+    <div class="modal-content">
+        <span class="close-btn" onclick="closeModal('addModal')">&times;</span>
+        <h3>Tambah Menu Baru</h3>
+        <form action="/admin/menus/add" method="POST">
+            <div class="form-group"><label>Nama Menu</label><input type="text" name="nama" required></div>
+            <div class="form-group"><label>Harga</label><input type="number" name="harga" required></div>
+            <div class="form-group"><label>Kategori</label>
+                <select name="id_kategori" required>
+                    <% categories.forEach(cat => { %>
+                        <option value="<%= cat.id %>"><%= cat.nama %></option>
+                    <% }) %>
+                </select>
+            </div>
+            <div class="form-group"><label>Deskripsi</label><textarea name="deskripsi" rows="3"></textarea></div>
+            <button type="submit" class="btn-primary">Simpan Menu</button>
+        </form>
+    </div>
+</div>
+
+<!-- Modal Edit Menu -->
+<div id="editModal" class="modal">
+    <div class="modal-content">
+        <span class="close-btn" onclick="closeModal('editModal')">&times;</span>
+        <h3>Edit Menu</h3>
+        <form id="editForm" action="" method="POST">
+            <div class="form-group"><label>Nama Menu</label><input type="text" id="editNama" name="nama" required></div>
+            <div class="form-group"><label>Harga</label><input type="number" id="editHarga" name="harga" required></div>
+            <div class="form-group"><label>Kategori</label>
+                <select id="editKategori" name="id_kategori" required>
+                    <% categories.forEach(cat => { %>
+                        <option value="<%= cat.id %>"><%= cat.nama %></option>
+                    <% }) %>
+                </select>
+            </div>
+            <div class="form-group"><label>Deskripsi</label><textarea id="editDeskripsi" name="deskripsi" rows="3"></textarea></div>
+            <button type="submit" class="btn-primary">Simpan Perubahan</button>
+        </form>
+    </div>
+</div>
+
+<script>
+    function openModal(id) { document.getElementById(id).style.display = 'block'; }
+    function closeModal(id) { document.getElementById(id).style.display = 'none'; }
+    function openEditModal(menuString) {
+        const menu = JSON.parse(menuString);
+        document.getElementById('editForm').action = '/admin/menus/edit/' + menu.id;
+        document.getElementById('editNama').value = menu.nama;
+        document.getElementById('editHarga').value = menu.harga;
+        document.getElementById('editKategori').value = menu.id_kategori;
+        document.getElementById('editDeskripsi').value = menu.deskripsi;
+        openModal('editModal');
+    }
+    window.onclick = function(event) {
+        if (event.target.classList.contains('modal')) {
+            event.target.style.display = "none";
+        }
+    }
+</script>
+
+<%- include('partials/footer') %>

@@ -1,0 +1,38 @@
+<%- include('partials/header') %>
+<div class="admin-content">
+    <h2>Kelola Pesanan Masuk</h2>
+    <table class="data-table">
+        <thead>
+            <tr>
+                <th>ID Pesanan</th>
+                <th>Tanggal</th>
+                <th>Email Pelanggan</th>
+                <th>Total</th>
+                <th>Status</th>
+                <th>Aksi</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% orders.forEach(order => { %>
+                <tr>
+                    <td><%= order.id %></td>
+                    <td><%= order.tanggal %></td>
+                    <td><%= order.user %></td>
+                    <td>Rp<%= order.total.toLocaleString('id-ID') %></td>
+                    <td>
+                         <form action="/admin/orders/update-status/<%= order.id %>" method="POST">
+                            <select name="status" onchange="this.form.submit()">
+                                <option value="Sedang Diproses" <%= order.status === 'Sedang Diproses' ? 'selected' : '' %>>Sedang Diproses</option>
+                                <option value="Dikirim" <%= order.status === 'Dikirim' ? 'selected' : '' %>>Dikirim</option>
+                                <option value="Selesai" <%= order.status === 'Selesai' ? 'selected' : '' %>>Selesai</option>
+                                <option value="Dibatalkan" <%= order.status === 'Dibatalkan' ? 'selected' : '' %>>Dibatalkan</option>
+                            </select>
+                        </form>
+                    </td>
+                    <td><a href="#" class="action-btn">Lihat Detail</a></td>
+                </tr>
+            <% }) %>
+        </tbody>
+    </table>
+</div>
+<%- include('partials/footer') %>

@@ -1,0 +1,278 @@
+<%- include('../partials/header') %>
+
+<style>
+    /* Custom styles for profile page */
+    .profile-section {
+        padding: 60px 0;
+        background-color: var(--background-light);
+    }
+    .profile-grid {
+        display: grid;
+        grid-template-columns: 280px 1fr;
+        gap: 30px;
+        align-items: flex-start;
+    }
+    .profile-sidebar, .profile-content {
+        background-color: var(--white-color);
+        border-radius: var(--border-radius);
+        box-shadow: var(--box-shadow);
+    }
+    .profile-sidebar {
+        padding: 30px;
+        text-align: center;
+    }
+    .profile-avatar-wrapper {
+        position: relative;
+        width: 120px;
+        margin: 0 auto 20px auto;
+    }
+    .profile-avatar {
+        width: 120px;
+        height: 120px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 4px solid var(--primary-color);
+    }
+    #change-photo-btn {
+        position: absolute;
+        bottom: 5px;
+        right: 5px;
+        background-color: var(--white-color);
+        color: var(--primary-color);
+        border: 2px solid var(--primary-color);
+        width: 35px;
+        height: 35px;
+        border-radius: 50%;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        transition: all 0.3s ease;
+    }
+    #change-photo-btn:hover {
+        background-color: var(--primary-color);
+        color: var(--white-color);
+        transform: scale(1.1);
+    }
+    #photo-upload {
+        display: none;
+    }
+    .profile-sidebar h4 {
+        font-size: 1.4rem;
+        margin-bottom: 5px;
+    }
+    .profile-sidebar p {
+        color: var(--text-light);
+        margin-bottom: 30px;
+        word-wrap: break-word;
+    }
+    .profile-nav ul li {
+        margin-bottom: 10px;
+    }
+    .profile-nav a {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        padding: 12px 20px;
+        border-radius: 8px;
+        color: var(--text-dark);
+        font-weight: 500;
+        transition: all 0.3s ease;
+    }
+    .profile-nav a:hover, .profile-nav a.active {
+        background-color: var(--primary-color);
+        color: var(--white-color);
+    }
+    .profile-nav i {
+        width: 20px;
+    }
+    .profile-content {
+        padding: 40px;
+    }
+    .profile-content h3 {
+        font-size: 2rem;
+        margin-bottom: 30px;
+    }
+    .form-group {
+        margin-bottom: 20px;
+    }
+    .form-group label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: 500;
+    }
+    .form-group input {
+        background-color: var(--white-color);
+        width: 100%;
+        max-width: 400px;
+        padding: 12px;
+        border: 1px solid var(--light-gray);
+        border-radius: 8px;
+        font-size: 1rem;
+    }
+    .form-group input:focus {
+        border-color: var(--primary-color);
+        outline: none;
+        box-shadow: 0 0 0 3px rgba(39, 174, 96, 0.1);
+    }
+    /* Styles for Order History Table */
+    .order-history-table { width: 100%; border-collapse: collapse; }
+    .order-history-table th, .order-history-table td { padding: 15px; text-align: left; border-bottom: 1px solid var(--light-gray); }
+    .order-history-table th { background-color: #f8f9fa; font-weight: 600; }
+    .order-status { padding: 5px 10px; border-radius: 50px; font-size: 0.8rem; font-weight: 500; color: var(--white-color); }
+    .status-selesai { background-color: var(--primary-color); }
+    .status-proses { background-color: var(--secondary-color); }
+    .order-details-btn { font-size: 0.9rem; color: var(--primary-color); font-weight: 500; }
+
+    @media (max-width: 768px) {
+        .profile-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+
+<section class="profile-section">
+    <div class="container">
+        <div class="profile-grid" data-aos="fade-up">
+            <!-- Sidebar Navigasi Profil -->
+            <aside class="profile-sidebar">
+                <!-- Form untuk upload gambar ditempatkan di sini agar terpisah -->
+                <form action="/profil/update" method="POST" id="profile-form" enctype="multipart/form-data">
+                    <div class="profile-avatar-wrapper">
+                        <img src="<%= session.user.profilePicture %>" alt="Avatar Pengguna" class="profile-avatar" id="avatar-preview">
+                        <!-- Tombol untuk ganti foto -->
+                        <input type="file" name="profilePicture" id="photo-upload" accept="image/*" onchange="document.getElementById('profile-form').submit()">
+                        <label for="photo-upload" id="change-photo-btn" title="Ganti foto profil">
+                            <i class="fas fa-camera"></i>
+                        </label>
+                    </div>
+                    <h4><%= session.user.name %></h4>
+                    <p><%= session.user.email %></p>
+                </form>
+
+                <nav class="profile-nav">
+                    <ul>
+                        <li><a href="/profil" class="<%= currentView === 'info' ? 'active' : '' %>"><i class="fas fa-user-edit"></i> Edit Profil</a></li>
+                        <li><a href="/profil?view=riwayat" class="<%= currentView === 'riwayat' ? 'active' : '' %>"><i class="fas fa-receipt"></i> Riwayat Pesanan</a></li>
+                        <li><a href="/logout" style="color: var(--secondary-color);"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+                    </ul>
+                </nav>
+            </aside>
+
+            <!-- Konten Utama Profil -->
+            <main class="profile-content">
+                <% if (currentView === 'info') { %>
+                    <h3>Edit Informasi Profil</h3>
+                    <!-- Form ini hanya untuk update data teks, terhubung dengan form utama via id -->
+                    <form action="/profil/update" method="POST" id="profile-text-form">
+                        <div class="form-group">
+                            <label for="name">Nama Lengkap</label>
+                            <input type="text" id="name" name="name" value="<%= session.user.name %>" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="email">Alamat Email</label>
+                            <input type="email" id="email" name="email" value="<%= session.user.email %>" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="phone">Nomor Telepon</label>
+                            <input type="tel" id="phone" name="phone" value="<%= session.user.phone || '' %>" placeholder="Masukkan nomor telepon...">
+                        </div>
+                        <button type="submit" class="btn-primary">Simpan Perubahan</button>
+                    </form>
+                <% } else { %>
+                    <!-- Tampilan Riwayat Pesanan -->
+                    <h3>Riwayat Pesanan Anda</h3>
+                    <% if (orders && orders.length > 0) { %>
+                        <table class="order-history-table">
+                            <thead>
+                                <tr>
+                                    <th>ID Pesanan</th>
+                                    <th>Tanggal</th>
+                                    <th>Total</th>
+                                    <th>Status</th>
+                                    <th>Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% orders.forEach(order => { %>
+                                    <tr>
+                                        <td><strong><%= order.id %></strong></td>
+                                        <td><%= order.tanggal %></td>
+                                        <td>Rp<%= order.total.toLocaleString('id-ID') %></td>
+                                        <td>
+                                            <span class="order-status <%= order.status === 'Selesai' ? 'status-selesai' : 'status-proses' %>">
+                                                <%= order.status %>
+                                            </span>
+                                        </td>
+                                        <td><a href="/pesanan/<%= order.id %>" class="order-details-btn">Lihat Detail</a></td>
+                                    </tr>
+                                <% }) %>
+                            </tbody>
+                        </table>
+                    <% } else { %>
+                        <p>Anda belum memiliki riwayat pesanan.</p>
+                    <% } %>
+                <% } %>
+            </main>
+        </div>
+    </div>
+</section>
+
+<!-- Script untuk preview gambar -->
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const photoUpload = document.getElementById('photo-upload');
+    const avatarPreview = document.getElementById('avatar-preview');
+
+    if (photoUpload && avatarPreview) {
+        // Event listener untuk preview saat file dipilih
+        photoUpload.addEventListener('change', function() {
+            const file = this.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    avatarPreview.src = e.target.result;
+                    // Setelah preview, form otomatis disubmit untuk mengupload gambar
+                    document.getElementById('profile-form').submit();
+                }
+                reader.readAsDataURL(file);
+            }
+        });
+    }
+
+    // Menggabungkan data teks ke form upload foto sebelum submit
+    const textForm = document.getElementById('profile-text-form');
+    const photoForm = document.getElementById('profile-form');
+
+    if (textForm && photoForm) {
+        textForm.addEventListener('submit', function(e) {
+            e.preventDefault(); // Mencegah form teks submit sendiri
+
+            // Salin nilai dari form teks ke form foto
+            const nameInput = document.createElement('input');
+            nameInput.type = 'hidden';
+            nameInput.name = 'name';
+            nameInput.value = document.getElementById('name').value;
+            photoForm.appendChild(nameInput);
+
+            const emailInput = document.createElement('input');
+            emailInput.type = 'hidden';
+            emailInput.name = 'email';
+            emailInput.value = document.getElementById('email').value;
+            photoForm.appendChild(emailInput);
+
+            const phoneInput = document.createElement('input');
+            phoneInput.type = 'hidden';
+            phoneInput.name = 'phone';
+            phoneInput.value = document.getElementById('phone').value;
+            photoForm.appendChild(phoneInput);
+
+            // Submit form utama yang berisi foto dan data teks
+            photoForm.submit();
+        });
+    }
+});
+</script>
+
+<%- include('../partials/footer') %>

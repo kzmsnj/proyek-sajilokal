@@ -1,0 +1,55 @@
+<%- include('../partials/header') %>
+
+<!-- Food Search Section (versi ringkas) -->
+<section class="food-search" style="padding: 50px 0;">
+    <div class="container">
+        <h2 data-aos="fade-up">Temukan Sajian Favoritmu</h2>
+        <form action="/makanan" method="GET" data-aos="fade-up" data-aos-delay="200">
+            <input type="search" name="keyword" placeholder="Cari menu di sini..." value="<%= searchTerm %>" required>
+            <input type="submit" value="Cari" class="btn-primary">
+        </form>
+    </div>
+</section>
+
+<!-- Foods Section Start -->
+<section class="food-menu">
+    <div class="container">
+        <div class="section-title" data-aos="fade-up">
+            <% if (searchTerm) { %>
+                <h2>Hasil untuk "<%= searchTerm %>"</h2>
+            <% } else { %>
+                <h2>Semua Menu Kami</h2>
+            <% } %>
+        </div>
+
+        <% if (makanan && makanan.length > 0) { %>
+            <div class="grid-layout">
+                <% makanan.forEach((item, index) => { %>
+                <div class="food-card" data-aos="fade-up" data-aos-delay="<%= 100 * (index % 6) %>">
+                    <div class="card-image">
+                        <img src="<%= item.gambar %>" alt="<%= item.nama %>">
+                    </div>
+                    <div class="card-content">
+                        <h4><%= item.nama %></h4>
+                        <p class="food-price">Rp<%= item.harga.toLocaleString('id-ID') %></p>
+                        <p class="food-details"><%= item.deskripsi %></p>
+                        <form action="/keranjang/tambah/<%= item.id %>" method="POST">
+                            <button type="submit" class="btn-primary">Pesan Sekarang</button>
+                        </form>
+                    </div>
+                </div>
+                <% }) %>
+            </div>
+        <% } else { %>
+            <div class="text-center" data-aos="fade-up" style="padding: 50px 0;">
+                <h3>Maaf, makanan yang Anda cari tidak ditemukan.</h3>
+                <p>Coba gunakan kata kunci lain atau lihat semua menu kami.</p>
+                <br>
+                <a href="/makanan" class="btn-primary">Lihat Semua Menu</a>
+            </div>
+        <% } %>
+    </div>
+</section>
+<!-- Foods Section End -->
+
+<%- include('../partials/footer') %>

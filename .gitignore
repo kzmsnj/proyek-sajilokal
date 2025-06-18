@@ -1,0 +1,8 @@
+# Folder dependensi Node.js
+node_modules
+
+# File environment (jika ada)
+.env
+
+# Log
+npm-debug.log*

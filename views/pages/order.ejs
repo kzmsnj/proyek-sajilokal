@@ -1,0 +1,304 @@
+<%- include('../partials/header') %>
+
+<style>
+    /* Page-specific styles for the interactive cart */
+    .cart-page-section {
+        padding: 60px 0;
+        background-color: var(--background-light);
+        min-height: 70vh; /* Memberikan tinggi minimal pada section */
+        display: flex;
+        align-items: center;
+    }
+    .cart-container {
+        display: grid;
+        grid-template-columns: 2fr 1fr;
+        gap: 30px;
+        align-items: flex-start;
+    }
+    .cart-items-panel {
+        background-color: var(--white-color);
+        border-radius: var(--border-radius);
+        box-shadow: var(--box-shadow);
+        padding: 30px;
+    }
+    /* Mengubah daftar item menjadi tabel */
+    .cart-table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+    .cart-table thead th {
+        text-align: left;
+        padding-bottom: 20px;
+        color: var(--text-light);
+        font-weight: 500;
+        border-bottom: 2px solid var(--light-gray);
+    }
+    .cart-table tbody td {
+        padding: 20px 0;
+        border-bottom: 1px solid var(--light-gray);
+        vertical-align: middle;
+    }
+    .cart-item-img img {
+        width: 90px;
+        height: 90px;
+        border-radius: var(--border-radius);
+        object-fit: cover;
+    }
+    .cart-item-info h5 {
+        font-size: 1.1rem;
+        margin-bottom: 5px;
+    }
+    .cart-item-info p {
+        color: var(--text-light);
+        font-size: 0.9rem;
+    }
+    .quantity-control {
+        display: flex;
+        align-items: center;
+        border: 1px solid var(--light-gray);
+        border-radius: 50px;
+        width: fit-content;
+    }
+    .quantity-control button {
+        background: none;
+        border: none;
+        cursor: pointer;
+        padding: 8px 12px;
+        font-size: 1rem;
+        color: var(--text-dark);
+        transition: color 0.2s ease;
+    }
+    .quantity-control button:hover {
+        color: var(--primary-color);
+    }
+    .quantity-control input {
+        width: 40px;
+        text-align: center;
+        border: none;
+        background: transparent;
+        font-weight: 500;
+        /* PERBAIKAN: Menambahkan 'appearance' standar setelah '-moz-appearance' */
+        -moz-appearance: textfield;
+        appearance: textfield;
+    }
+    input::-webkit-outer-spin-button,
+    input::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+    .cart-item-subtotal {
+        font-weight: 600;
+        font-size: 1.1rem;
+        text-align: right;
+    }
+    .cart-actions {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 20px;
+    }
+    .clear-cart-btn {
+        background-color: #ffeded;
+        color: #e74c3c;
+        border: none;
+        padding: 10px 15px;
+        border-radius: 8px;
+        cursor: pointer;
+        font-weight: 500;
+        transition: all 0.3s;
+    }
+    .clear-cart-btn:hover {
+        background-color: #e74c3c;
+        color: white;
+        transform: translateY(-2px);
+    }
+
+    /* Summary Panel */
+    .summary-panel {
+        background-color: var(--white-color);
+        border-radius: var(--border-radius);
+        box-shadow: var(--box-shadow);
+        padding: 30px;
+        position: sticky;
+        top: 110px; /* Adjust based on navbar height */
+    }
+    .summary-panel h3 {
+        margin-bottom: 25px;
+        border-bottom: 1px solid var(--light-gray);
+        padding-bottom: 15px;
+    }
+    .summary-line {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 15px;
+        color: var(--text-light);
+    }
+    .summary-line strong {
+        color: var(--text-dark);
+    }
+    .summary-line.total {
+        font-size: 1.25rem;
+        font-weight: 700;
+        color: var(--text-dark);
+        margin-top: 20px;
+        padding-top: 20px;
+        border-top: 2px solid var(--text-dark);
+    }
+    .coupon-form {
+        display: flex;
+        gap: 10px;
+        margin-top: 20px;
+    }
+    .coupon-form input {
+        flex-grow: 1;
+        border: 1px solid var(--light-gray);
+        border-radius: 8px;
+        padding: 10px;
+    }
+    /* Empty Cart - Desain Diperbaiki */
+    .empty-cart {
+        text-align: center;
+        padding: 60px 40px;
+        background-color: var(--white-color);
+        border-radius: var(--border-radius);
+        width: 100%;
+        max-width: 600px;
+        margin: 0 auto; /* Memusatkan kotak */
+        box-shadow: var(--box-shadow);
+    }
+    .empty-cart i {
+        font-size: 5rem; /* Ikon lebih besar */
+        color: var(--primary-color); /* Warna ikon disesuaikan */
+        opacity: 0.2;
+        margin-bottom: 25px;
+    }
+    .empty-cart h3 {
+        font-size: 1.8rem;
+        margin-bottom: 15px;
+    }
+    .empty-cart p {
+        color: var(--text-light);
+        line-height: 1.6; /* PERBAIKAN: Menambahkan line-height */
+        max-width: 450px; /* Membatasi lebar teks */
+        margin: 0 auto 30px auto; /* PERBAIKAN: Menambah margin bawah */
+    }
+
+    /* Responsive */
+    @media (max-width: 992px) {
+        .cart-container { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 768px) {
+        .cart-table thead { display: none; } /* Hide header on mobile */
+        .cart-table, .cart-table tbody, .cart-table tr, .cart-table td { display: block; width: 100%; }
+        .cart-table tr { 
+            display: grid; 
+            grid-template-columns: 90px 1fr;
+            gap: 15px;
+            padding: 20px 0;
+            border-bottom: 1px solid var(--light-gray);
+        }
+        .cart-table tbody td { border: none; padding: 0; }
+        .cart-table .cart-item-img { grid-row: 1 / 3; }
+        .cart-table .cart-item-info { grid-column: 2 / 3; }
+        .cart-table .cart-item-subtotal { grid-column: 2 / 3; text-align: left; margin-top: 10px; }
+        .cart-table .quantity-control { grid-column: 2 / 3; }
+    }
+</style>
+
+<section class="cart-page-section">
+    <div class="container">
+        
+        <% if (cart && cart.length > 0) { %>
+            <div class="section-title" data-aos="fade-up">
+                <h2>Keranjang Belanja</h2>
+            </div>
+            <div class="cart-container" data-aos="fade-up" data-aos-delay="200">
+                <!-- Panel Item Keranjang -->
+                <div class="cart-items-panel">
+                    <table class="cart-table">
+                        <thead>
+                            <tr>
+                                <th colspan="2">Produk</th>
+                                <th>Jumlah</th>
+                                <th style="text-align: right;">Subtotal</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% cart.forEach(item => { %>
+                                <tr>
+                                    <td class="cart-item-img">
+                                        <img src="<%= item.gambar %>" alt="<%= item.nama %>">
+                                    </td>
+                                    <td class="cart-item-info">
+                                        <h5><%= item.nama %></h5>
+                                        <p>Rp<%= item.harga.toLocaleString('id-ID') %></p>
+                                    </td>
+                                    <td>
+                                        <form action="/keranjang/update/<%= item.id %>" method="POST" class="quantity-control">
+                                            <button type="button" onclick="this.nextElementSibling.stepDown(); this.form.submit()" title="Kurangi">-</button>
+                                            <input type="number" name="quantity" value="<%= item.qty %>" min="0" onchange="this.form.submit()">
+                                            <button type="button" onclick="this.previousElementSibling.stepUp(); this.form.submit()" title="Tambah">+</button>
+                                        </form>
+                                    </td>
+                                    <td class="cart-item-subtotal">
+                                        Rp<%= (item.harga * item.qty).toLocaleString('id-ID') %>
+                                    </td>
+                                </tr>
+                            <% }) %>
+                        </tbody>
+                    </table>
+
+                    <div class="cart-actions">
+                        <a href="/makanan" class="order-details-btn"><i class="fas fa-arrow-left"></i> Lanjutkan Belanja</a>
+                        <form action="/keranjang/kosongkan" method="POST">
+                            <button type="submit" class="clear-cart-btn">Kosongkan Keranjang</button>
+                        </form>
+                    </div>
+
+                </div>
+
+                <!-- Panel Ringkasan Pesanan -->
+                <aside class="summary-panel">
+                    <h3>Ringkasan Pesanan</h3>
+                    <div class="summary-line">
+                        <span>Subtotal</span>
+                        <strong>Rp<%= subtotal.toLocaleString('id-ID') %></strong>
+                    </div>
+                    <% if (discountAmount > 0) { %>
+                    <div class="summary-line" style="color: var(--primary-color);">
+                        <span>Diskon Kupon</span>
+                        <strong>- Rp<%= discountAmount.toLocaleString('id-ID') %></strong>
+                    </div>
+                    <% } %>
+                    <div class="summary-line">
+                        <span>Biaya Pengiriman</span>
+                        <strong>Rp5.000</strong>
+                    </div>
+                    <div class="summary-line total">
+                        <span>Total</span>
+                        <span>Rp<%= (total + 5000).toLocaleString('id-ID') %></span>
+                    </div>
+
+                    <form action="/keranjang/kupon" method="POST" class="coupon-form">
+                        <input type="text" name="coupon_code" placeholder="Masukkan kode kupon">
+                        <button type="submit" class="btn-primary" style="padding: 10px 15px;">Pakai</button>
+                    </form>
+
+                    <form action="/checkout" method="POST" style="margin-top: 20px;">
+                        <button type="submit" class="btn-primary" style="width: 100%;">Lanjutkan ke Pembayaran</button>
+                    </form>
+                </aside>
+            </div>
+        <% } else { %>
+            <!-- Tampilan Keranjang Kosong yang Diperbaiki -->
+            <div class="empty-cart" data-aos="fade-up">
+                <i class="fas fa-shopping-bag"></i>
+                <h3>Keranjang Anda Kosong</h3>
+                <p>Sepertinya Anda belum menemukan menu yang pas di hati. Mari jelajahi lagi!</p>
+                <a href="/makanan" class="btn-primary" style="margin-top: 25px;">Lihat Semua Menu</a>
+            </div>
+        <% } %>
+    </div>
+</section>
+
+<%- include('../partials/footer') %>
