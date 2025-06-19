@@ -8,7 +8,7 @@ const flash = require('connect-flash');
 const multer = require('multer');
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 4000;
 
 // =================================================================
 // 2. PENGATURAN MIDDLEWARE
@@ -76,7 +76,7 @@ let kategoriMakanan = [
 
 let semuaMakanan = [
     // Paket Nasi (id_kategori: 1)
-    { id: 1, id_kategori: 1, nama: 'Nasi Rames Komplit', harga: 15000, gambar: '/img/makanan/nasi-rames.jpg', deskripsi: 'Nasi dengan orek tempe, tumis buncis, dan ayam goreng.' },
+    { id: 1, id_kategori: 1, nama: 'Nasi Rames Komplit', harga: 15000, gambar: '/img/kategori/nasi-rames.jpg', deskripsi: 'Nasi dengan orek tempe, tumis buncis, dan ayam goreng.' },
     { id: 2, id_kategori: 1, nama: 'Nasi Rendang', harga: 18000, gambar: '/img/makanan/nasi-rendang.jpg', deskripsi: 'Nasi dengan rendang daging sapi empuk dan kaya rempah.' },
     { id: 3, id_kategori: 1, nama: 'Nasi Ayam Bakar', harga: 16000, gambar: '/img/makanan/nasi-ayam-bakar.jpg', deskripsi: 'Nasi dengan ayam bakar bumbu kecap manis pedas.' },
     { id: 4, id_kategori: 1, nama: 'Nasi Lele Sambal', harga: 14000, gambar: '/img/makanan/lele-goreng.jpg', deskripsi: 'Nasi hangat disajikan dengan lele goreng renyah dan sambal terasi.' },
